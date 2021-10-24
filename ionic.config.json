@@ -1,0 +1,8 @@
+{
+  "name": "Canner",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "299d27b7"
+}

@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Canner",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
