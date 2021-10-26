@@ -1,18 +1,12 @@
-import { Redirect, Route } from 'react-router-dom';
-import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-} from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import { IonApp } from '@ionic/react';
+import Routes from './routes';
+
+// Import Capacitor's app and browser plugins, giving us access to `addListener` and `appUrlOpen`,
+// as well as the bits needed for Auth0 and React
+import { App as CapApp } from '@capacitor/app';
+import { Browser } from '@capacitor/browser';
+import { useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -33,41 +27,30 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/tab1">
-            <Tab1 />
-          </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
-          </Route>
-          <Route path="/tab3">
-            <Tab3 />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/tab1" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={triangle} />
-            <IonLabel>Tab 1</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Tab 2</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon icon={square} />
-            <IonLabel>Tab 3</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+
+
+const App: React.FC = () => {
+
+
+  const { handleRedirectCallback } = useAuth0();
+
+  useEffect(() => {
+    // Handle the 'appUrlOpen' event and call `handleRedirectCallback`
+    CapApp.addListener('appUrlOpen', async ({ url }) => {
+      if (url.includes('state') && (url.includes('code') || url.includes('error'))) {
+        await handleRedirectCallback(url);
+      }
+      // No-op on Android
+      await Browser.close();
+    });
+  }, [handleRedirectCallback]);
+
+  return (
+    <IonApp>
+      <Routes />
+    </IonApp>
+
+  );
+};
 
 export default App;
