@@ -12,9 +12,6 @@
     "@capacitor/status-bar": "1.0.5",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.6.3",
     "@types/jest": "^26.0.20",
     "@types/node": "^12.19.15",
     "@types/react": "^16.14.3",
@@ -47,8 +44,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "lint": "eslint . --ext js,jsx,mjs,ts,tsx",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -69,7 +68,21 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "3.2.5"
+    "@capacitor/cli": "3.2.5",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.6.3",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
+    "prettier": "^2.4.1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,mjs,ts,tsx}": "eslint --cache --fix"
   },
   "description": "An Ionic project"
 }
