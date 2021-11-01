@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useHistory } from "react-router-dom";
 import {
   auth,
   emailAndPasswordRegistration,
+  signInWithFacebook,
   signInWithGoogle,
 } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  IonButton,
+  IonCol,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonRow,
+} from "@ionic/react";
+import { personCircle } from "ionicons/icons";
 
+import "./Login.css";
 import "./Register.css";
 
 const Register: React.FC = () => {
@@ -22,49 +34,104 @@ const Register: React.FC = () => {
   };
 
   useEffect(() => {
-    if (loading) return;
-    if (user) history.replace("/dashboard");
-  }, [user, loading]);
+    if (user) {
+      history.replace("/profile");
+    }
+  }, [user]);
 
-  return (
-    <div className="register">
-      <div className="register__container">
-        <input
-          type="text"
-          className="register__textBox"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Full Name"
-        />
-        <input
-          type="text"
-          className="register__textBox"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="E-mail Address"
-        />
-        <input
-          type="password"
-          className="register__textBox"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
+  return loading ? (
+    <p>Loading...</p>
+  ) : (
+    <div className="login">
+      <div className="login__container">
+        <IonRow>
+          <IonCol>
+            <IonIcon
+              style={{ fontSize: "70px", color: "#0040ff" }}
+              icon={personCircle}
+            />
+          </IonCol>
+        </IonRow>
+
+        <IonRow>
+          <IonCol>
+            <IonItem>
+              <IonLabel position="floating">Name</IonLabel>
+              <IonInput
+                type="text"
+                value={name}
+                onIonChange={(e) => setName(e.detail.value!)}
+              ></IonInput>
+            </IonItem>
+          </IonCol>
+        </IonRow>
+
+        <IonRow>
+          <IonCol>
+            <IonItem>
+              <IonLabel position="floating">Email</IonLabel>
+              <IonInput
+                type="email"
+                value={email}
+                onIonChange={(e) => setEmail(e.detail.value!)}
+              ></IonInput>
+            </IonItem>
+          </IonCol>
+        </IonRow>
+
+        <IonRow>
+          <IonCol>
+            <IonItem>
+              <IonLabel position="floating">Password</IonLabel>
+              <IonInput
+                type="password"
+                value={password}
+                onIonChange={(e) => setPassword(e.detail.value!)}
+              ></IonInput>
+            </IonItem>
+          </IonCol>
+        </IonRow>
         <button className="register__btn" onClick={register}>
           Register
         </button>
-        <button
-          className="register__btn register__google"
-          onClick={signInWithGoogle}
-        >
-          Register with Google
-        </button>
+
+        <IonRow>
+          <IonCol>
+            <hr />
+            <p>Or</p>
+            <hr />
+          </IonCol>
+        </IonRow>
+
+        <IonRow>
+          <IonCol>
+            <IonButton
+              className="login__google"
+              expand="block"
+              onClick={signInWithGoogle}
+            >
+              Sign Up with Google
+            </IonButton>
+          </IonCol>
+        </IonRow>
+
+        <IonRow>
+          <IonCol>
+            <IonButton
+              className="login__facebook"
+              expand="block"
+              onClick={signInWithFacebook}
+            >
+              Sign Up with Facebook
+            </IonButton>
+          </IonCol>
+        </IonRow>
         <div>
           Already have an account? <Link to="/">Login</Link> now.
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Register;

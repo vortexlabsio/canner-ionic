@@ -1,7 +1,10 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import Login from '../components/Login';
-import './Tab1.css';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 
 const Discover: React.FC = () => {
   return (
@@ -22,7 +25,6 @@ const Discover: React.FC = () => {
         </IonHeader>
       </IonContent>
     </IonPage>
-
   );
 };
 

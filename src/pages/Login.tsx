@@ -1,5 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import LoginComponent from '../components/Login';
+import { IonContent, IonHeader, IonPage, IonToolbar } from "@ionic/react";
+import LoginComponent from "../components/Login";
 
 const Login: React.FC = () => {
   return (
@@ -8,10 +8,9 @@ const Login: React.FC = () => {
         <IonToolbar />
       </IonHeader>
       <IonContent>
-          <LoginComponent />
+        <LoginComponent />
       </IonContent>
     </IonPage>
-
   );
 };
 
