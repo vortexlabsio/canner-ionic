@@ -1,5 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, addDoc, query, where } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  query,
+  where,
+} from "firebase/firestore";
 import {
   GoogleAuthProvider,
   FacebookAuthProvider,
@@ -8,25 +15,8 @@ import {
   signInWithPopup,
   getAuth,
   signOut,
-} from 'firebase/auth';
-
- const API_KEY = process.env.REACT_APP_API_KEY; 
- const AUTH_DOMAIN = process.env.REACT_APP_AUTH_DOMAIN; 
- const PROJECT_ID = process.env.REACT_APP_PROJECT_ID; 
- const STORAGE_BUCKET = process.env.REACT_APP_STORAGE_BUCKET; 
- const MESSAGING_ID = process.env.REACT_APP_MESSAGING_SENDER_ID; 
- const APP_ID = process.env.REACT_APP_APPID; 
- const MEASUREMENT_ID = process.env.REACT_APP_MEASUREMENT_ID; 
-
-const firebaseConfig = {
-  apiKey: API_KEY,
-  authDomain: AUTH_DOMAIN,
-  projectId: PROJECT_ID,
-  storageBucket: STORAGE_BUCKET,
-  messagingSenderId: MESSAGING_ID,
-  appId: APP_ID,
-  measurementId: MEASUREMENT_ID,
-};
+} from "firebase/auth";
+import { firebaseConfig } from "./env";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -51,7 +41,6 @@ const signInWithFacebook = async () => {
         authProvider: "facebook",
         email: user.email,
       });
-
     }
   } catch (err) {
     const e = err as Error;
@@ -76,7 +65,6 @@ const signInWithGoogle = async () => {
         authProvider: "google",
         email: user.email,
       });
-
     }
   } catch (err) {
     const e = err as Error;
@@ -95,7 +83,11 @@ const emailAndPasswordSignIn = async (email: string, password: string) => {
   }
 };
 
-const emailAndPasswordRegistration = async (name: string, email: string, password: string) => {
+const emailAndPasswordRegistration = async (
+  name: string,
+  email: string,
+  password: string
+) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;

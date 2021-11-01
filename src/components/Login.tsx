@@ -1,27 +1,40 @@
 import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { auth, emailAndPasswordSignIn, signInWithFacebook, signInWithGoogle } from "../firebase";
+import {
+  auth,
+  emailAndPasswordSignIn,
+  signInWithFacebook,
+  signInWithGoogle,
+} from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { IonButton, IonCol, IonIcon, IonInput, IonItem, IonLabel, IonRow, } from '@ionic/react';
+import {
+  IonButton,
+  IonCol,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonRow,
+} from "@ionic/react";
 
 import "./Login.css";
 import { personCircle } from "ionicons/icons";
 
 const Login: React.FC = () => {
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, loading] = useAuthState(auth);
-  const history = useHistory();
 
   useEffect(() => {
-    if (loading) {
-      // maybe trigger a loading screen
-      return;
+    if (user) {
+      history.replace("/discover");
     }
-    if (user) history.replace("/profile");
-  }, [user, loading]);
+  }, [user]);
 
-  return (
+  return loading ? (
+    <p>Loading...</p>
+  ) : (
     <div className="login">
       <div className="login__container">
         <IonRow>
@@ -41,8 +54,7 @@ const Login: React.FC = () => {
                 type="email"
                 value={email}
                 onIonChange={(e) => setEmail(e.detail.value!)}
-              >
-              </IonInput>
+              ></IonInput>
             </IonItem>
           </IonCol>
         </IonRow>
@@ -55,15 +67,17 @@ const Login: React.FC = () => {
                 type="password"
                 value={password}
                 onIonChange={(e) => setPassword(e.detail.value!)}
-              >
-              </IonInput>
+              ></IonInput>
             </IonItem>
           </IonCol>
         </IonRow>
 
         <IonRow>
           <IonCol>
-            <IonButton expand="block" onClick={() => emailAndPasswordSignIn(email, password)}>
+            <IonButton
+              expand="block"
+              onClick={() => emailAndPasswordSignIn(email, password)}
+            >
               Login
             </IonButton>
           </IonCol>
@@ -79,7 +93,11 @@ const Login: React.FC = () => {
 
         <IonRow>
           <IonCol>
-            <IonButton className="login__google" expand="block" onClick={signInWithGoogle} >
+            <IonButton
+              className="login__google"
+              expand="block"
+              onClick={signInWithGoogle}
+            >
               Login with Google
             </IonButton>
           </IonCol>
@@ -87,8 +105,12 @@ const Login: React.FC = () => {
 
         <IonRow>
           <IonCol>
-            <IonButton className="login__facebook" expand="block" onClick={signInWithFacebook} >
-              Login with Facebook 
+            <IonButton
+              className="login__facebook"
+              expand="block"
+              onClick={signInWithFacebook}
+            >
+              Login with Facebook
             </IonButton>
           </IonCol>
         </IonRow>
@@ -96,14 +118,13 @@ const Login: React.FC = () => {
         <IonRow>
           <IonCol>
             <p style={{ fontSize: "medium" }}>
-              Don't have an account? <Link to="/register">Register</Link>
+              Don&apos;t have an account? <Link to="/register">Register</Link>
             </p>
           </IonCol>
         </IonRow>
-
       </div>
     </div>
   );
-}
+};
 
 export default Login;

@@ -159,3 +159,6 @@ sketch
 /assets
 **/cypress.env.json
 cypress/downloads/
+
+# firebase
+src/env*

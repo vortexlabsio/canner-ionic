@@ -35,6 +35,8 @@ module.exports = {
     "react/prop-types": "off",
     // Prevent fragments from being added that have only a single child.
     "react/jsx-no-useless-fragment": "error",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
     "prefer-arrow-callback": "error",
     "prettier/prettier": [
       "error",
