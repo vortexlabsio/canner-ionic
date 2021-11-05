@@ -17,28 +17,28 @@ import {
 
 import { BackendContext, loggedIn } from "../State";
 
-import { login } from "../auth";
+import { signup } from "../auth";
+
 import urls from "../urls";
 
 import "./Form.css";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 
-const Login: React.FC = () => {
+const Signup = () => {
   const history = useHistory();
   const { dispatch } = useContext(BackendContext);
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+
+  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [formErrors, setFormErrors] = useState<Error>();
   const [showLoading, setShowLoading] = useState(false);
   const formRef = useRef(null);
 
-  const goTo = (path: string) => {
-    history.push(path, { direction: "forward" });
-  };
-
-  const handleGoTo = (e: SyntheticEvent, path: string) => {
+  const goTo = (e: SyntheticEvent, path: string) => {
     e.preventDefault();
-    goTo(path);
+    history.push(path, { direction: "forward" });
   };
 
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -46,15 +46,15 @@ const Login: React.FC = () => {
 
     try {
       setShowLoading(true);
-      const user = await login(email, password);
+      const user = await signup(email, password);
       dispatch(loggedIn(user));
       history.replace(urls.APP_HOME);
       setShowLoading(false);
     } catch (e) {
       const err = e as Error;
-      console.error(e);
       setShowLoading(false);
       setFormErrors(err);
+      console.log(formErrors);
     }
   };
 
@@ -63,62 +63,68 @@ const Login: React.FC = () => {
       <IonHeader>
         <IonToolbar color="light">
           <IonButtons slot="start">
-            <IonBackButton defaultHref={"/"} />
+            <IonBackButton defaultHref={`/`} />
           </IonButtons>
-          <IonTitle>Login</IonTitle>
+          <IonTitle>Sign up</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="form">
         <IonLoading
           isOpen={showLoading}
-          message="Logging in..."
+          message="Creating account..."
           onDidDismiss={() => setShowLoading(false)}
         />
         <form onSubmit={handleSubmit} method="post" ref={formRef} action="">
-          {formErrors ? (
-            <IonList>
-              <IonItem>JSON.stringify(formErrors)</IonItem>
-            </IonList>
-          ) : null}
           <IonList>
+            <IonItem>
+              <IonLabel position={"fixed"}>Name</IonLabel>
+              <IonInput
+                name="name"
+                type="text"
+                value={name}
+                onInput={(e) => setName(e.currentTarget.value as string)}
+              />
+            </IonItem>
+            <IonItem>
+              <IonLabel position={"fixed"}>Username</IonLabel>
+              <IonInput
+                name="username"
+                type="text"
+                value={username}
+                onInput={(e) => setUsername(e.currentTarget.value as string)}
+              />
+            </IonItem>
             <IonItem>
               <IonLabel position={"fixed"}>Email</IonLabel>
               <IonInput
+                name="email"
                 type="email"
                 value={email}
-                onInput={(e: SyntheticEvent<HTMLIonInputElement>) =>
-                  setEmail(e.currentTarget.value as string)
-                }
+                onInput={(e) => setEmail(e.currentTarget.value as string)}
               />
             </IonItem>
             <IonItem>
               <IonLabel position={"fixed"}>Password</IonLabel>
               <IonInput
+                name="password"
                 type="password"
                 value={password}
-                onInput={(e: SyntheticEvent<HTMLIonInputElement>) =>
-                  setPassword(e.currentTarget.value as string)
-                }
+                onInput={(e) => setPassword(e.currentTarget.value as string)}
               />
             </IonItem>
             <IonButton expand="block" type="submit">
-              Log in
+              Sign up
             </IonButton>
           </IonList>
         </form>
         <div className="below-form">
           <a
-            className="create"
             href="#/"
-            onClick={(e: SyntheticEvent) => handleGoTo(e, "/signup")}
+            onClick={(e) => {
+              goTo(e, "/login");
+            }}
           >
-            Create account instead
-          </a>
-          <a
-            href="#/"
-            onClick={(e: SyntheticEvent) => handleGoTo(e, "/reset-password")}
-          >
-            Forgot your password?
+            Already have an account? Log in
           </a>
         </div>
       </IonContent>
@@ -126,4 +132,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Signup;

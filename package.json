@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@auth0/auth0-react": "^1.8.0",
     "@capacitor/app": "^1.0.5",
     "@capacitor/browser": "^1.0.5",
     "@capacitor/core": "3.2.5",

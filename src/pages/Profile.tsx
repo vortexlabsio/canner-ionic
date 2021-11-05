@@ -1,91 +1,69 @@
+import { useCallback, useContext } from "react";
+
 import {
-  IonButton,
-  IonCol,
-  IonContent,
   IonHeader,
-  IonItem,
-  IonLabel,
   IonPage,
-  IonRow,
   IonTitle,
   IonToolbar,
+  IonList,
+  IonListHeader,
+  IonItem,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  useIonPopover,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
-import { auth, logoutUser } from "../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { ellipsisVertical } from "ionicons/icons";
+import { BackendContext, logout } from "../State";
+import urls from "../urls";
+import { useHistory } from "react-router";
 
-const userDetails = (user: any) => {
-  const { uid, displayName, email } = user;
-  return (
-    <>
-      <IonLabel position="floating">User Info</IonLabel>
-      <IonRow>
-        <IonCol>
-          <IonItem>
-            <p>{uid}</p>
-          </IonItem>
-        </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonCol>
-          <IonItem>
-            <p>{displayName}</p>
-          </IonItem>
-        </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonCol>
-          <IonItem>
-            <p>{email}</p>
-          </IonItem>
-        </IonCol>
-      </IonRow>
-    </>
-  );
-};
+const PopoverList: React.FC<{
+  onHide: () => void;
+  onLogout: () => void;
+}> = ({ onHide, onLogout }) => (
+  <IonList>
+    <IonListHeader>Ionic</IonListHeader>
+    <IonItem button onClick={onLogout}>
+      Log Out
+    </IonItem>
+    <IonItem lines="none" detail={false} button onClick={onHide}>
+      Close
+    </IonItem>
+  </IonList>
+);
 
 const Profile: React.FC = () => {
-  const [user, loading, error] = useAuthState(auth);
   const history = useHistory();
+  const { state, dispatch } = useContext(BackendContext);
+  const [present, dismiss] = useIonPopover(PopoverList, {
+    onHide: () => dismiss(),
+    onLogout: () => doLogout(),
+  });
 
-  const handleLogout = async () => {
-    await logoutUser();
-    history.replace("/");
-  };
+  const doLogout = useCallback(async () => {
+    dispatch(logout());
+    history.push(urls.LOGIN);
+  }, [dispatch, history]);
 
-  const notAuth = () => {
-    return (
-      <p>
-        Woops.. looks like ya need to login
-        <a href="/login"></a>
-      </p>
-    );
-  };
+  console.log(state);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Something went wrong</p>;
-  }
-
-  return user ? (
+  return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Profile</IonTitle>
+          <IonTitle>Your Recipes</IonTitle>
+          <IonButtons slot="end">
+            <IonButton
+              fill="clear"
+              onClick={(e) => present({ event: e.nativeEvent })}
+            >
+              <IonIcon icon={ellipsisVertical} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <div>
-          <IonButton onClick={handleLogout}>Log Out</IonButton>
-        </div>
-        {userDetails(user)}
-      </IonContent>
     </IonPage>
-  ) : (
-    notAuth()
   );
 };
 

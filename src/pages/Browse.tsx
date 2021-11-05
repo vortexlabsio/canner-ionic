@@ -6,7 +6,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 
-const Discover: React.FC = () => {
+const Browse: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -28,4 +28,4 @@ const Discover: React.FC = () => {
   );
 };
 
-export default Discover;
+export default Browse;

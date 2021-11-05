@@ -1,7 +1,13 @@
-import React, { Suspense } from "react";
-import { IonApp, IonLoading } from "@ionic/react";
+import { IonApp, IonRouterOutlet, IonPage } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { SplashScreen } from "@ionic-native/splash-screen";
+import { Redirect, Route } from "react-router-dom";
+import { DataProvider } from "./State";
+
+import urls from "./urls";
+import Tabs from "./Tabs";
+import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
+import Signup from "./pages/SignUp";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -21,24 +27,32 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./firebase";
-import { PublicRoutes, PrivateRoutes } from "./routes";
 
-// Hide the splash (you should do this on app launch)
-SplashScreen.hide();
-
-const App: React.FunctionComponent = () => {
-  const [user] = useAuthState(auth);
-
+const App = () => {
   return (
-    <IonApp>
-      <IonReactRouter>
-        <Suspense fallback={<IonLoading isOpen={true} />}>
-          {user ? <PrivateRoutes /> : <PublicRoutes />}
-        </Suspense>
-      </IonReactRouter>
-    </IonApp>
+    <DataProvider>
+      <IonApp>
+        <IonReactRouter>
+          <IonPage>
+            <IonRouterOutlet>
+              <Route path={urls.LOGIN} component={Login} exact={true} />
+              <Route path={urls.SIGNUP} component={Signup} exact={true} />
+              <Route
+                path={urls.RESET_PASSWORD}
+                component={ResetPassword}
+                exact={true}
+              />
+              <Route
+                exact={true}
+                path="/"
+                render={() => <Redirect to={urls.APP_HOME} />}
+              />
+            </IonRouterOutlet>
+            <Route path="/app" component={Tabs} />
+          </IonPage>
+        </IonReactRouter>
+      </IonApp>
+    </DataProvider>
   );
 };
 
