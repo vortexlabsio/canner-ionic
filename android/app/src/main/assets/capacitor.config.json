@@ -1,0 +1,6 @@
+{
+	"appId": "com.threeroundstudios.canner",
+	"appName": "Canner",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}

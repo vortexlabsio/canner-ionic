@@ -12,9 +12,13 @@ import {
   IonButton,
   IonIcon,
   useIonPopover,
+  IonContent,
+  IonLabel,
+  IonThumbnail,
 } from "@ionic/react";
 import { ellipsisVertical } from "ionicons/icons";
-import { BackendContext, logout } from "../State";
+import { BackendContext, logout, getRecipes } from "../State";
+import { img } from "../util";
 import urls from "../urls";
 import { useHistory } from "react-router";
 
@@ -41,7 +45,10 @@ const Profile: React.FC = () => {
     onLogout: () => doLogout(),
   });
 
+  const recipes = getRecipes(state);
+
   const doLogout = useCallback(async () => {
+    dismiss();
     dispatch(logout());
     history.push(urls.LOGIN);
   }, [dispatch, history]);
@@ -50,19 +57,38 @@ const Profile: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Your Recipes</IonTitle>
-          <IonButtons slot="end">
-            <IonButton
-              fill="clear"
-              onClick={(e) => present({ event: e.nativeEvent })}
-            >
-              <IonIcon icon={ellipsisVertical} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <IonContent>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Your Recipes</IonTitle>
+            <IonButtons slot="end">
+              <IonButton
+                fill="clear"
+                onClick={(e) => present({ event: e.nativeEvent })}
+              >
+                <IonIcon icon={ellipsisVertical} />
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonList>
+          <IonListHeader>
+            <IonLabel>Recipes</IonLabel>
+          </IonListHeader>
+          {recipes.map((recipe) => (
+            <IonItem key={recipe.id}>
+              <IonThumbnail slot="start">
+                <img src={img(recipe.img)} />
+              </IonThumbnail>
+              <IonLabel>
+                <h2>{recipe.title}</h2>
+                <h3>{recipe.author}</h3>
+                <p>{recipe.text}</p>
+              </IonLabel>
+            </IonItem>
+          ))}
+        </IonList>
+      </IonContent>
     </IonPage>
   );
 };
